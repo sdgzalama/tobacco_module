@@ -107,8 +107,8 @@ else:
 
 # Default data sheet (your live source)
 DEFAULT_SHEET_URL = st.secrets.get("DATA_SHEET_URL",
-                                   "https://docs.google.com/spreadsheets/d/11xze3POQCog9h8yhv5v_9rkrkI3qvygIZgEysAaIzHE/edit?gid=0#gid=0"
-    # "https://docs.google.com/spreadsheets/d/1DqqpBxkWUGM8zi6C7_SUlg0LzzlMstq7jDfw8BCHZNk/edit#gid=0"
+                                #    "https://docs.google.com/spreadsheets/d/11xze3POQCog9h8yhv5v_9rkrkI3qvygIZgEysAaIzHE/edit?gid=0#gid=0"
+    "https://docs.google.com/spreadsheets/d/1DqqpBxkWUGM8zi6C7_SUlg0LzzlMstq7jDfw8BCHZNk/edit#gid=0"
 )
 
 # Optional separate registry workbook (recommended). If not provided, app tries to use the data sheet.
@@ -609,7 +609,7 @@ def upload_to_google_sheet(df):
         st.warning("Google Sheets client not available; skipping upload.")
         return
     try:
-        sheet = client_gsheets.open_by_key("1N_reX0o4c4_iNJE8PX4Mh6oVVugnpgl6hzDIS2FVsow")
+        sheet = client_gsheets.open_by_key("11xze3POQCog9h8yhv5v_9rkrkI3qvygIZgEysAaIzHE")
         worksheet = sheet.get_worksheet(0)
         rows = df.astype(str).fillna("").values.tolist()
         CHUNK = 500
