@@ -1143,22 +1143,23 @@ if choice == "Analyze Excel":
         index=0
     )
     PROMPTS = {
-        "Original (yours)": {
-            "FILTER_POLICY_PROMPT": """
+    "Original (yours)": {
+        "FILTER_POLICY_PROMPT": """
 Is this text related to any of the following?
-- Food, beverages, nutrition, labeling, standards, alcohol, agriculture/processing;
-- Public health or NCDs (e.g. obesity, diabetes, cancer, hypertension, CVD);
-- Policy, regulation, guidelines, enforcement, or updates from regulators (TBS, MOH)?
+- Tobacco products, cigarette manufacturing, import/export, or marketing;
+- Tobacco control, regulation, taxation, advertising bans, packaging/labelling, smoke-free laws, illicit trade, or enforcement actions;
+- Public health or NCDs (e.g., cancer, CVD, respiratory diseases) caused or influenced by tobacco use;
+- Policy, regulation, guidelines, enforcement, or updates from tobacco-related regulators (TBS, MOH, TFDA, TRA, WHO FCTC)?
 Respond with Yes or No only.
 """,
-            "FILTER_INTERF_PROMPT": """
-Does the text show food/beverage industry influence on policy or public perception?
-Examples include lobbying, marketing, third-party advocacy, CSR, meetings with regulators,
-voluntary codes, legal threats, funding research, or spreading misinformation.
+        "FILTER_INTERF_PROMPT": """
+Does the text show tobacco industry influence on policy or public perception?
+Examples include lobbying, CSR, sponsorship, marketing, public relations, meetings with regulators,
+voluntary codes, front groups, litigation threats, funding research, or spreading misinformation.
 Respond with Yes or No only.
 """,
-            "SYSTEM_PROMPT_EXTRACT": """
-You are an expert analyst extracting structured records about food policy, public health (NCDs), and industry interference in Tanzania.
+        "SYSTEM_PROMPT_EXTRACT": """
+You are an expert analyst extracting structured records about tobacco products, tobacco control policies, and tobacco industry interference in Tanzania.
 
 Inputs per row:
 - Date (may be empty or noisy)
@@ -1167,30 +1168,31 @@ Inputs per row:
 
 OUTPUT: exactly 9 fields separated by `|` in this order:
 1. Date — Use the provided date if plausible; otherwise extract from text if available; otherwise write a best-guess like 'July 2025' (never leave blank).
-2. Industry Actor(s) — Name the primary actor (org/company/agency). If not explicitly named but stakeholders are present, pick the most central stakeholder as the actor or check description. Never write "—", "N/A", or "Unspecified".
-3. Industry Tactic — Choose a concrete tactic (e.g., advocacy, lobbying, sponsorship, CSR, misleading ads, funding research, third-party advocacy). If not explicit, infer from the action described.
-4. Description — One concise sentence (no line breaks) describing what happened.
+2. Industry Actor(s) — Name the main tobacco actor (e.g., Tanzania Cigarette Company, British American Tobacco, local distributors, lobby groups). If not explicit, infer the most central stakeholder.
+3. Industry Tactic — Choose a specific tactic (e.g., lobbying, CSR, marketing, sponsorship, litigation, misleading health claims, third-party advocacy, funding research). Infer from context if not explicit.
+4. Description — One concise sentence (no line breaks) summarizing what happened.
 5. Stakeholders — List all named parties (comma-separated). If only the actor is present, repeat the actor here.
-6. Policy Area — e.g., SSB tax, front-of-pack labelling, nutrition labelling, food standards, alcohol marketing, school food policy, taxation, advertising restrictions. If implicit, infer the most relevant one.
-7. Geographical Focus — Country/region/city involved. If not explicit but Tanzanian regulators/NGOs appear, use "Tanzania".
-8. Outcome/Impact — The result or intended effect. If not explicit, infer the likely or stated aim (e.g., "aims to empower consumers via clearer labels").
+6. Policy Area — e.g., tobacco tax, advertising bans, packaging/labelling, smoke-free laws, illicit trade, or enforcement of tobacco control legislation. Infer the most relevant one if implicit.
+7. Geographical Focus — Country/region/city involved. If not explicit but Tanzanian entities appear, use "Tanzania".
+8. Outcome/Impact — The result or intended effect (e.g., delayed regulation, strengthened enforcement, policy adoption, public backlash, influence on perception).
 9. Source — If a URL is provided, copy it. Otherwise, return a clear reference string from the text such as:
-   "<Publication/Outlet>, <date>, p.<page>" (e.g., "The Citizen, 2024-08-12, p.5");
+   "<Publication/Outlet>, <date>, p.<page>";
    "<Report/Document title>, <section/page>";
    "<Organization> press release <date>";
    "<Journal> (<year>), <volume/issue>, <pages>".
    Never leave this blank and never write "No URL". Always return the best available reference text.
 
-You MUST fill every field (never output "—", "N/A", or "Unspecified")."
-If the text is unrelated to food policy or NCDs, SKIP the row entirely (return nothing).
+You MUST fill every field (never output "—", "N/A", or "Unspecified").
+If the text is unrelated to tobacco policy or tobacco industry interference, SKIP the row entirely (return nothing).
 """
-        },
-        "Optimized (shorter)": {
-            "FILTER_POLICY_PROMPT": "Is the text about food/beverage/nutrition/alcohol/agriculture, NCDs/public health, or policy/regulation/enforcement (e.g., TBS/MOH)? Reply Yes or No.",
-            "FILTER_INTERF_PROMPT": "Does it show industry influence (lobbying, marketing, third-party advocacy, CSR, meetings with regulators, voluntary codes, legal threats, funding research, misinformation)? Reply Yes or No.",
-            "SYSTEM_PROMPT_EXTRACT": "Extract 9 fields separated by `|`: Date | Industry Actor(s) | Industry Tactic | Description | Stakeholders | Policy Area | Geographical Focus | Outcome/Impact | Source. Never leave blanks; infer when reasonable; skip unrelated rows."
-        }
+    },
+    "Optimized (shorter)": {
+        "FILTER_POLICY_PROMPT": "Is the text about tobacco products, tobacco control, taxation, packaging/labelling, smoke-free laws, or enforcement (e.g., TBS/MOH/TRA)? Reply Yes or No.",
+        "FILTER_INTERF_PROMPT": "Does it show tobacco industry influence (lobbying, CSR, marketing, front groups, litigation, research funding, or misinformation)? Reply Yes or No.",
+        "SYSTEM_PROMPT_EXTRACT": "Extract 9 fields separated by `|`: Date | Industry Actor(s) | Industry Tactic | Description | Stakeholders | Policy Area | Geographical Focus | Outcome/Impact | Source. Focus only on tobacco policy or tobacco industry interference; infer when reasonable; skip unrelated rows."
     }
+}
+
     FILTER_POLICY_PROMPT   = PROMPTS[prompt_preset]["FILTER_POLICY_PROMPT"]
     FILTER_INTERF_PROMPT   = PROMPTS[prompt_preset]["FILTER_INTERF_PROMPT"]
     SYSTEM_PROMPT_EXTRACT  = PROMPTS[prompt_preset]["SYSTEM_PROMPT_EXTRACT"]
