@@ -107,7 +107,8 @@ else:
 
 # Default data sheet (your live source)
 DEFAULT_SHEET_URL = st.secrets.get("DATA_SHEET_URL",
-    "https://docs.google.com/spreadsheets/d/1DqqpBxkWUGM8zi6C7_SUlg0LzzlMstq7jDfw8BCHZNk/edit#gid=0"
+                                   "https://docs.google.com/spreadsheets/d/11xze3POQCog9h8yhv5v_9rkrkI3qvygIZgEysAaIzHE/edit?gid=0#gid=0"
+    # "https://docs.google.com/spreadsheets/d/1DqqpBxkWUGM8zi6C7_SUlg0LzzlMstq7jDfw8BCHZNk/edit#gid=0"
 )
 
 # Optional separate registry workbook (recommended). If not provided, app tries to use the data sheet.
